@@ -1,0 +1,28 @@
+name: Add Git trailers for PRs
+
+on:
+  push:
+    branches: 
+    - main
+
+jobs:
+  vmspawn:
+    runs-on: [self-hosted, x86_64]
+    steps:
+      - name: Cleanup previous jobs
+        run: |
+          echo "Cleaning up previous runs"
+          sudo rm -rf ${{ github.workspace }}/*
+          sudo rm -rf ${{ github.workspace }}/.??*
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Do vm-spawn
+        uses: ananos/vmspawn@main
+        with:
+          kcli_key: ${{ secrets.KCLI_ID_RSA }}
+          script: "ls -latr /tmp"
+
